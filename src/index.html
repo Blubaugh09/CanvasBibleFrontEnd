@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Bible</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+    .content {
+      padding: 80px 20px 20px;
+    }
+    .sigma-container {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border: 1px solid #ddd;
+      background-color: #fff;
+    }
+    .canvas-buttons {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+    }
+    .floating-modal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 20;
+      display: none;
+      animation: wave 2s infinite;
+    }
+    @keyframes wave {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      25% { transform: translate(-50%, -50%) rotate(1deg); }
+      50% { transform: translate(-50%, -50%) rotate(0deg); }
+      75% { transform: translate(-50%, -50%) rotate(-1deg); }
+      100% { transform: translate(-50%, -50%) rotate(0deg); }
+    }
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand {
+      font-size: 24px;
+      font-weight: bold;
+      color: #007bff !important;
+    }
+    .nav-link {
+      color: #007bff !important;
+    }
+    .btn-primary {
+      background-color: #007bff;
+      border: none;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      border: none;
+    }
+    h1, h2, h3 {
+      color: #343a40;
+    }
+    h3 {
+      text-align: center;
+    }
+    .img-placeholder {
+      background-color: #e9ecef;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      color: #6c757d;
+      margin: 10px 0;
+    }
+    footer {
+      background-color: #f8f9fa;
+      padding: 20px 0;
+      text-align: center;
+      border-top: 1px solid #ddd;
+      margin-top: 20px;
+    }
+    /* Add padding to each section to offset the navbar height */
+    .section {
+      padding-top: 80px; /* Adjust this value as necessary */
+      margin-top: -80px; /* Adjust this value as necessary */
+    }
+    
+    /* Custom margin-top class for extra small screens */
+    @media (max-width: 991px) {
+      .mt-xs-5 {
+        margin-top: 3rem; /* Equivalent to mt-5 */
+      }
+      .mt-xs-5-section {
+        display: block;
+      }
+    }
+
+    @media (min-width: 991px) {
+      .mt-xs-5 {
+        margin-top: 0 !important;
+      }
+      .mt-xs-5-section {
+        display: none;
+      }
+    }
+    </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Canvas Bible</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#test-it-out">Try It!</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#why-this-helps">Why?</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#how-it-works">How?</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#price">Pricing</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#faqs">FAQ's</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div id="home" class="container content section">
+    <div class="mb-5 mt-5">
+      <h1 class="text-center mb-5 " style="margin-top:100px;">Welcome to Canvas Bible</h1>
+      <p>
+        Explore the Bible in a new and interactive way. Create study nodes and edges to make biblical connections and visualize your study topics. Connect different canvases to discover deeper insights and enhance your memory.
+      </p>
+    </div>
+    <div class="row d-flex align-items-stretch">
+      <div class="col-lg-6 col-md-12 section d-flex flex-column">
+        <h3>Jesus Prophecy</h3>
+        <div id="sigma-container" class="sigma-container flex-grow-1"></div>
+      </div>
+      <div id="test-it-out" class=" col-lg-6 col-md-12 mt-xs-5 d-flex flex-column">
+        <h3>Try It!</h3>
+        <div id="sigma-container-2" class="sigma-container">
+          <div class="canvas-buttons">
+            <button id="add-node" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addNodeModal">Add Node</button>
+            <button id="add-edge" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addEdgeModal">Add Edge</button>
+          </div>
+          <div id="floating-modal" class="floating-modal">
+            <p>Click "Add Node" to add your first node.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="why-this-helps" class="row mt-5 section">
+      <div class="col-lg-8 d-flex flex-column justify-content-center order-lg-2 order-1">
+        <h2 class="text-center">Why This Helps</h2>
+        <p>
+          The brain is full of neurons that are interconnected, and we are wired by God to think this way—to make connections, both small and large, between thoughts and ideas. This natural design aids our memory and understanding. Our study tool for the Bible mirrors this neural network through nodes and edges, just like the brain and the Bible, which is filled with beautiful connections.
+        </p>
+        <p>
+          By using Canvas Bible, you can visualize these connections, making it easier to remember and understand the scripture. The Bible is described as living and active, designed by God to help us grow:
+        </p>
+        <p>
+          "For the word of God is living and active, sharper than any two-edged sword, piercing to the division of soul and of spirit, of joints and of marrow, and discerning the thoughts and intentions of the heart." - Hebrews 4:12 (ESV)
+        </p>
+        <p>
+          We love discovering these connections and want to share them with others while encouraging you to find and share your own insights throughout the scripture.
+        </p>
+      </div>
+      <div class="col-lg-4 d-flex justify-content-center align-items-center order-lg-1 order-2">
+        <img src="images/Why.png" alt="Why This Helps" class="img-fluid img-placeholder">
+      </div>
+    </div>
+    <div id="how-it-works" class="row mt-5 section">
+      <div class="col-lg-8 d-flex flex-column justify-content-center order-lg-1 order-1">
+        <h2 class="text-center">How It Works</h2>
+        <p>
+          With Canvas Bible, you can study the Bible using a canvas of nodes and edges to make biblical connections with verses. Whether you’re studying a book, a person, or a topic, you can create these study nodes and edges to help you remember and visualize them.
+        </p>
+        <p>
+          You have the flexibility to move the nodes and edges however you want, allowing you to design your study layout in a way that best aids your memory. Additionally, you can connect nodes from different canvases, helping you make connections between various parts of your study.
+        </p>
+        <p>
+          Explore, create, and share your biblical connections with Canvas Bible, and discover how the interconnected design of the Bible can deepen your understanding and faith.
+        </p>
+      </div>
+      <div class="col-lg-4 d-flex justify-content-center align-items-center order-lg-2 order-2">
+        <img src="images/how.png" alt="How It Works" class="img-fluid img-placeholder">
+      </div>
+    </div>
+    <div id="price" class="row mt-5 section">
+      <div class="col-lg-4 d-flex justify-content-center align-items-center order-lg-1 order-2">
+        <img src="images/price.png" alt="Price" class="img-fluid img-placeholder">
+      </div>
+      <div class="col-lg-8 d-flex flex-column justify-content-center order-lg-2 order-1">
+        <h2 class="text-center">Pricing</h2>
+        <p>
+          <strong>Absolutely Free!</strong>
+        </p>
+        <p>
+          At Canvas Bible, we believe in making the study of God’s word accessible to everyone. Our tool is completely free to use, because we are committed to helping you deepen your faith and understanding of the Bible. Whether you're praying, reading, or using our visual study aids, we want you to have every opportunity to seek and find God.
+        </p>
+        <p>
+          Our innovative canvas approach allows you to explore biblical connections in a way that mimics the interconnected nature of your brain, enhancing your memory and comprehension. By offering this tool for free, we aim to support your spiritual journey and encourage you to discover and share insights within the scripture.
+        </p>
+        <p>
+          We are dedicated to fostering a community of learners and believers who can grow together, sharing their discoveries and strengthening their faith. Join us in exploring the Bible like never before, and see how interconnected learning can transform your study experience.
+        </p>
+      </div>
+    </div>
+    <div id="faqs" class="row mt-5 section">
+      <div class="col-lg-12 d-flex flex-column justify-content-center order-lg-2 order-1">
+        <h2 class="text-center">Frequently Asked Questions</h2>
+        <p>
+          <strong>Q: What is the Canvas Bible project?</strong><br>
+          A: The Canvas Bible project is a tool that allows users to study the Bible using a canvas where they can create nodes and edges to visually represent and connect biblical verses, topics, people, or events. It helps users to remember and understand the connections within the scripture better.<br><br>
+    
+          <strong>Q: How do I create a study node?</strong><br>
+          A: To create a study node, simply click on the canvas where you want the node to appear. A modal will pop up allowing you to enter the details for the node, such as the verse, topic, or person you are studying. Once you’ve entered the information, the node will be created on the canvas.<br><br>
+    
+          <strong>Q: Can I move the nodes and edges around the canvas?</strong><br>
+          A: Yes, you can freely move nodes and edges around the canvas. This flexibility allows you to organize your study visually in a way that makes the most sense to you and aids in memory retention.<br><br>
+    
+          <strong>Q: Is it possible to connect nodes from different canvases?</strong><br>
+          A: Yes, you can connect nodes from different canvases. This feature allows you to see and understand the connections between different parts of the Bible, making your study more comprehensive and interconnected.<br><br>
+    
+          <strong>Q: Is the Canvas Bible project free to use?</strong><br>
+          A: Yes, the Canvas Bible project is completely free to use. We aim to provide an accessible tool for everyone who wants to deepen their understanding of the Bible.<br><br>
+    
+          <strong>Q: Can I share my canvases with others?</strong><br>
+          A: Yes, you can share your canvases with others. You have the option to share them publicly or unlisted, allowing for dynamic sharing without needing to create screenshots.<br><br>
+    
+          <strong>Q: How do I get started with the Canvas Bible project?</strong><br>
+          A: Getting started is easy! Simply sign up on our website, create a new canvas, and start adding nodes and edges to represent your study. You can explore the various features and customize your canvas as you go.<br><br>
+    
+          <strong>Q: Can I use the Canvas Bible project on my mobile device?</strong><br>
+          A: Yes, the Canvas Bible project is designed to be responsive and can be used on mobile devices. This allows you to study and make connections on the go.<br><br>
+    
+          <strong>Q: How does using nodes and edges help with studying the Bible?</strong><br>
+          A: Using nodes and edges helps to visually map out connections between different parts of the Bible. This method mimics the interconnected nature of the brain, making it easier to remember and understand the relationships between verses, topics, and events.
+        </p>
+      </div>
+    </div>
+
+  <!-- Bootstrap Modal for Node Information -->
+  <div class="modal fade" id="nodeModal" tabindex="-1" aria-labelledby="nodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="nodeModalLabel">Node Information</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="nodeModalBody">
+          <!-- Node information will be inserted here -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Modal for Edge Information -->
+  <div class="modal fade" id="edgeModal" tabindex="-1" aria-labelledby="edgeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="edgeModalLabel">Edge Information</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="edgeModalBody">
+          <!-- Edge information will be inserted here -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Modal for Adding Node -->
+  <div class="modal fade" id="addNodeModal" tabindex="-1" aria-labelledby="addNodeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addNodeModalLabel">Add Node</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addNodeForm">
+            <div class="mb-3">
+              <label for="nodeLabel" class="form-label">Label</label>
+              <input type="text" class="form-control" id="nodeLabel" required>
+            </div>
+            <div class="mb-3">
+              <label for="nodeColor" class="form-label">Color</label>
+              <input type="color" class="form-control" id="nodeColor" value="#ff0000" required>
+            </div>
+            <div class="mb-3">
+              <label for="nodeSize" class="form-label">Size</label>
+              <input type="number" class="form-control" id="nodeSize" value="10" required>
+            </div>
+            <div class="mb-3">
+              <label for="nodeX" class="form-label">X Coordinate</label>
+              <input type="number" class="form-control" id="nodeX" required>
+            </div>
+            <div class="mb-3">
+              <label for="nodeY" class="form-label">Y Coordinate</label>
+              <input type="number" class="form-control" id="nodeY" required>
+            </div>
+            <div class="mb-3">
+              <label for="nodeNotes" class="form-label">Notes</label>
+              <textarea class="form-control" id="nodeNotes" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button id="saveAndAddAnotherNode" class="btn btn-secondary">Save and Add Another</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Modal for Adding Edge -->
+  <div class="modal fade" id="addEdgeModal" tabindex="-1" aria-labelledby="addEdgeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addEdgeModalLabel">Add Edge</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addEdgeForm">
+            <div class="mb-3">
+              <label for="startNode" class="form-label">Start Node</label>
+              <select class="form-control" id="startNode" required></select>
+            </div>
+            <div class="mb-3">
+              <label for="endNode" class="form-label">End Node</label>
+              <select class="form-control" id="endNode" required></select>
+            </div>
+            <div class="mb-3">
+              <label for="edgeLabel" class="form-label">Label</label>
+              <input type="text" class="form-control" id="edgeLabel" required>
+            </div>
+            <div class="mb-3">
+              <label for="edgeColor" class="form-label">Color</label>
+              <input type="color" class="form-control" id="edgeColor" value="#000000" required>
+            </div>
+            <div class="mb-3">
+              <label for="edgeSize" class="form-label">Size</label>
+              <input type="number" class="form-control" id="edgeSize" value="3" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button id="saveAndAddAnotherEdge" class="btn btn-secondary">Save and Add Another</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; <span id="currentYear"></span> Canvas Bible. Contact: <a href="mailto:blu.anesthesia@gmail.com">blu.anesthesia@gmail.com</a>. Follow us on <a href="https://twitter.com/your_twitter_handle" target="_blank">Twitter</a>.</p>
+  </footer>
+
+  <script>
+    $(document).ready(function() {
+      $('.navbar-nav a').on('click', function(){
+        if($('.navbar-toggler').is(':visible')){
+          $('.navbar-collapse').collapse('hide');
+        }
+      });
+
+      const sigmaContainer2 = $('#sigma-container-2');
+
+      // Check if there are no nodes (you'll need to implement this check based on your application logic)
+      const noNodesExist = true; // Change this according to your application logic
+
+      if (noNodesExist) {
+        $('#floating-modal').fadeIn();
+      }
+
+      // Example event to hide the floating modal when a node is added (you'll need to hook this up to your actual node addition logic)
+      $('#add-node').click(function() {
+        $('#floating-modal').fadeOut();
+      });
+
+      // Set the current year in the footer
+      $('#currentYear').text(new Date().getFullYear());
+    });
+  </script>
+</body>
+</html>

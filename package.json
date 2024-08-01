@@ -1,0 +1,31 @@
+{
+  "name": "your_project_name",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "start": "webpack serve --mode development"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "babel-loader": "^8.2.2",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.1",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^4.0.0"
+  },
+  "dependencies": {
+    "chroma-js": "^2.4.2",
+    "file-saver": "^2.0.5",
+    "graphology": "^0.23.1",
+    "graphology-layout-force": "^0.2.4",
+    "puppeteer": "^22.15.0",
+    "sigma": "3.0.0-beta.13",
+    "uuid": "^10.0.0"
+  }
+}
